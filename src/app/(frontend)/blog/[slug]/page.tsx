@@ -5,6 +5,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import { BreadcrumbStructuredData, BlogPostingStructuredData } from '@/components/seo/StructuredData'
 import { absoluteUrl } from '@/lib/utils'
 import { RefreshRouteOnSave } from '@/components/LivePreview/RefreshRouteOnSave'
+import { AuthorCard } from '@/components/AuthorCard'
 
 type Args = { params: Promise<{ slug: string }>; searchParams: Promise<{ preview?: string }> }
 
@@ -57,6 +58,7 @@ export default async function BlogPostPage({ params, searchParams }: Args) {
   if (!post) notFound()
 
   const image = typeof post.featuredImage === 'object' ? post.featuredImage : null
+  const author = typeof post.author === 'object' ? post.author : null
 
   return (
     <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
@@ -102,6 +104,13 @@ export default async function BlogPostPage({ params, searchParams }: Args) {
       {post.content && (
         <div className="prose prose-invert prose-lg max-w-none prose-headings:text-heading prose-a:text-primary">
           <RichText data={post.content} />
+        </div>
+      )}
+
+      {author && (
+        <div className="mt-12">
+          <h2 className="text-xl font-bold text-heading mb-4">About the Author</h2>
+          <AuthorCard author={author} />
         </div>
       )}
     </article>

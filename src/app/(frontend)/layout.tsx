@@ -3,6 +3,8 @@ import { getPayload } from '@/lib/payload'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Listing Site',
   description: 'Find the best options reviewed and ranked',
@@ -36,18 +38,16 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       : null
 
   return (
-    <html lang="en">
+    <html lang="en" style={{ ...themeVars, fontFamily }}>
       <head>
         {fontUrl && (
           <link rel="stylesheet" href={fontUrl} />
         )}
       </head>
-      <body>
-        <div style={{ ...themeVars, fontFamily }} className="min-h-screen bg-bg text-text">
-          <Header siteSettings={siteSettings} navigation={navigation} />
-          <main>{children}</main>
-          <Footer footer={footer} siteSettings={siteSettings} />
-        </div>
+      <body className="min-h-screen bg-bg text-text">
+        <Header siteSettings={siteSettings} navigation={navigation} />
+        <main>{children}</main>
+        <Footer footer={footer} siteSettings={siteSettings} />
       </body>
     </html>
   )

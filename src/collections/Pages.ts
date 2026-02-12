@@ -7,6 +7,9 @@ import { FAQ } from '@/blocks/FAQ'
 import { ProsCons } from '@/blocks/ProsCons'
 import { ComparisonTable } from '@/blocks/ComparisonTable'
 import { CTABanner } from '@/blocks/CTABanner'
+import { Steps } from '@/blocks/Steps'
+import { ListingGrid } from '@/blocks/ListingGrid'
+import { ImageCard } from '@/blocks/ImageCard'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -29,7 +32,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'layout',
       type: 'blocks',
-      blocks: [Hero, ListingTable, RichContent, FAQ, ProsCons, ComparisonTable, CTABanner],
+      blocks: [Hero, ListingTable, RichContent, FAQ, ProsCons, ComparisonTable, CTABanner, Steps, ListingGrid, ImageCard],
     },
     {
       name: 'status',

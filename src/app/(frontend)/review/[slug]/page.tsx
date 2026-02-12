@@ -8,6 +8,10 @@ import { ProsConsBlock } from '@/components/blocks/ProsConsBlock'
 import { BreadcrumbStructuredData, ReviewStructuredData } from '@/components/seo/StructuredData'
 import { absoluteUrl } from '@/lib/utils'
 import { RefreshRouteOnSave } from '@/components/LivePreview/RefreshRouteOnSave'
+import { SpecsBar } from '@/components/SpecsBar'
+import { ImageGallery } from '@/components/ImageGallery'
+import { AuthorCard } from '@/components/AuthorCard'
+import { ListingCard } from '@/components/ListingCard'
 
 type Args = { params: Promise<{ slug: string }>; searchParams: Promise<{ preview?: string }> }
 
@@ -58,6 +62,31 @@ export default async function ReviewPage({ params, searchParams }: Args) {
   if (!listing) notFound()
 
   const logo = typeof listing.logo === 'object' ? listing.logo : null
+  const featuredImage = typeof listing.featuredImage === 'object' ? listing.featuredImage : null
+  const author = typeof listing.author === 'object' ? listing.author : null
+
+  // Resolve related listings
+  let relatedListings: any[] = []
+  if (listing.relatedListings && listing.relatedListings.length > 0) {
+    relatedListings = listing.relatedListings
+      .map((r: any) => (typeof r === 'object' ? r : null))
+      .filter(Boolean)
+  } else if (listing.categories && listing.categories.length > 0) {
+    // Auto-query same-category listings
+    const categoryIds = listing.categories.map((c: any) => (typeof c === 'object' ? c.id : c))
+    const { docs } = await payload.find({
+      collection: 'listings',
+      where: {
+        status: { equals: 'published' },
+        categories: { in: categoryIds },
+        id: { not_equals: listing.id },
+      },
+      sort: 'rank',
+      limit: 4,
+      depth: 1,
+    })
+    relatedListings = docs
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -74,6 +103,32 @@ export default async function ReviewPage({ params, searchParams }: Args) {
         description={listing.shortDescription}
         url={`/review/${slug}`}
       />
+
+      {/* Featured Image Banner */}
+      {featuredImage && (
+        <div className="rounded-2xl overflow-hidden mb-8 border border-white/10">
+          <img
+            src={featuredImage.sizes?.large?.url || featuredImage.url}
+            alt={featuredImage.alt || listing.name}
+            className="w-full h-64 sm:h-80 lg:h-96 object-cover"
+          />
+        </div>
+      )}
+
+      {/* Specs Cards */}
+      {listing.specs && listing.specs.length > 0 && (
+        <div className="mb-8">
+          <SpecsBar specs={listing.specs} />
+        </div>
+      )}
+
+      {/* Gallery */}
+      {listing.gallery && listing.gallery.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-heading mb-4">Screenshots</h2>
+          <ImageGallery items={listing.gallery} />
+        </div>
+      )}
 
       {/* Header */}
       <div className="bg-card rounded-2xl border border-white/10 p-6 sm:p-8 mb-8">
@@ -119,8 +174,53 @@ export default async function ReviewPage({ params, searchParams }: Args) {
 
       {/* Detailed Review */}
       {listing.detailedReview && (
-        <div className="prose prose-invert prose-lg max-w-none prose-headings:text-heading prose-a:text-primary">
+        <div className="prose prose-invert prose-lg max-w-none prose-headings:text-heading prose-a:text-primary mb-8">
           <RichText data={listing.detailedReview} />
+        </div>
+      )}
+
+      {/* FAQ */}
+      {listing.faq && listing.faq.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-heading mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-3">
+            {listing.faq.map((item: any, i: number) => (
+              <details
+                key={i}
+                className="group bg-card rounded-xl border border-white/10 overflow-hidden"
+              >
+                <summary className="flex items-center justify-between cursor-pointer px-6 py-4 text-heading font-medium hover:bg-white/5 transition-colors">
+                  {item.question}
+                  <span className="ml-2 text-text/50 group-open:rotate-180 transition-transform">
+                    &#9662;
+                  </span>
+                </summary>
+                <div className="px-6 pb-4 prose prose-invert prose-sm max-w-none">
+                  <RichText data={item.answer} />
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Author Card */}
+      {author && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-heading mb-4">About the Author</h2>
+          <AuthorCard author={author} />
+        </div>
+      )}
+
+      {/* Related Listings */}
+      {relatedListings.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-bold text-heading mb-6">Related Reviews</h2>
+          <div className="space-y-4">
+            {relatedListings.map((related: any, i: number) => (
+              <ListingCard key={related.id} listing={related} rank={i + 1} showRank={false} />
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -1,5 +1,17 @@
 import type { GlobalConfig } from 'payload'
 
+const colorField = (name: string, label: string, defaultValue: string) => ({
+  name,
+  type: 'text' as const,
+  label,
+  defaultValue,
+  admin: {
+    components: {
+      afterInput: ['/src/components/admin/ColorPickerInput#ColorPickerInput'],
+    },
+  },
+})
+
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Site Settings',
@@ -29,15 +41,24 @@ export const SiteSettings: GlobalConfig = {
       type: 'group',
       label: 'Theme',
       fields: [
-        { name: 'primaryColor', type: 'text', defaultValue: '#6366f1' },
-        { name: 'secondaryColor', type: 'text', defaultValue: '#4f46e5' },
-        { name: 'accentColor', type: 'text', defaultValue: '#f59e0b' },
-        { name: 'heroGradientStart', type: 'text', defaultValue: '#1e1b4b' },
-        { name: 'heroGradientEnd', type: 'text', defaultValue: '#312e81' },
-        { name: 'backgroundColor', type: 'text', defaultValue: '#0f0e1a' },
-        { name: 'cardBackground', type: 'text', defaultValue: '#1a1830' },
-        { name: 'textColor', type: 'text', defaultValue: '#e2e8f0' },
-        { name: 'headingColor', type: 'text', defaultValue: '#ffffff' },
+        {
+          name: 'palettePreview',
+          type: 'ui',
+          admin: {
+            components: {
+              Field: '/src/components/admin/ThemePalette#ThemePalette',
+            },
+          },
+        },
+        colorField('primaryColor', 'Primary Color', '#6366f1'),
+        colorField('secondaryColor', 'Secondary Color', '#4f46e5'),
+        colorField('accentColor', 'Accent Color', '#f59e0b'),
+        colorField('heroGradientStart', 'Hero Gradient Start', '#1e1b4b'),
+        colorField('heroGradientEnd', 'Hero Gradient End', '#312e81'),
+        colorField('backgroundColor', 'Background Color', '#0f0e1a'),
+        colorField('cardBackground', 'Card Background', '#1a1830'),
+        colorField('textColor', 'Text Color', '#e2e8f0'),
+        colorField('headingColor', 'Heading Color', '#ffffff'),
         {
           name: 'fontFamily',
           type: 'select',

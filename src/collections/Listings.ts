@@ -26,6 +26,12 @@ export const Listings: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'featuredImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: { description: 'Hero banner image for the review page' },
+    },
+    {
       name: 'rating',
       type: 'number',
       min: 0,
@@ -80,8 +86,44 @@ export const Listings: CollectionConfig = {
       admin: { description: 'Affiliate link' },
     },
     {
+      name: 'specs',
+      type: 'array',
+      admin: { description: 'Key-value attributes (e.g. "RTP: 97.5%", "Price: $29/mo")' },
+      fields: [
+        { name: 'label', type: 'text', required: true },
+        { name: 'value', type: 'text', required: true },
+      ],
+    },
+    {
+      name: 'gallery',
+      type: 'array',
+      fields: [
+        { name: 'image', type: 'upload', relationTo: 'media', required: true },
+        { name: 'caption', type: 'text' },
+      ],
+    },
+    {
       name: 'detailedReview',
       type: 'richText',
+    },
+    {
+      name: 'faq',
+      type: 'array',
+      fields: [
+        { name: 'question', type: 'text', required: true },
+        { name: 'answer', type: 'richText', required: true },
+      ],
+    },
+    {
+      name: 'relatedListings',
+      type: 'relationship',
+      relationTo: 'listings',
+      hasMany: true,
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'authors',
     },
     {
       name: 'categories',

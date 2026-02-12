@@ -34,6 +34,11 @@ export const BlogPosts: CollectionConfig = {
       type: 'textarea',
     },
     {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'authors',
+    },
+    {
       name: 'categories',
       type: 'relationship',
       relationTo: 'categories',

@@ -5,6 +5,9 @@ import { FAQBlock } from './FAQBlock'
 import { ProsConsBlock } from './ProsConsBlock'
 import { ComparisonTableBlock } from './ComparisonTableBlock'
 import { CTABannerBlock } from './CTABannerBlock'
+import { StepsBlock } from './StepsBlock'
+import { ListingGridBlock } from './ListingGridBlock'
+import { ImageCardBlock } from './ImageCardBlock'
 
 const blockComponents: Record<string, React.ComponentType<any>> = {
   hero: HeroBlock,
@@ -14,6 +17,9 @@ const blockComponents: Record<string, React.ComponentType<any>> = {
   prosCons: ProsConsBlock,
   comparisonTable: ComparisonTableBlock,
   ctaBanner: CTABannerBlock,
+  steps: StepsBlock,
+  listingGrid: ListingGridBlock,
+  imageCard: ImageCardBlock,
 }
 
 type Props = {

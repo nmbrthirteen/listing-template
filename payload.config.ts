@@ -11,6 +11,7 @@ import { Listings } from '@/collections/Listings'
 import { Pages } from '@/collections/Pages'
 import { Categories } from '@/collections/Categories'
 import { BlogPosts } from '@/collections/BlogPosts'
+import { Authors } from '@/collections/Authors'
 import { SiteSettings } from '@/globals/SiteSettings'
 import { Navigation } from '@/globals/Navigation'
 import { Footer } from '@/globals/Footer'
@@ -52,7 +53,7 @@ export default buildConfig({
       collections: ['pages', 'blog-posts', 'listings'],
     },
   },
-  collections: [Users, Media, Categories, Listings, Pages, BlogPosts],
+  collections: [Users, Media, Categories, Listings, Pages, BlogPosts, Authors],
   globals: [SiteSettings, Navigation, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-key',

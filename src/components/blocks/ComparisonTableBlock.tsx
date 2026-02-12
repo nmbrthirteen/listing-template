@@ -40,11 +40,16 @@ export function ComparisonTableBlock({ title, listings, features }: Props) {
             {features?.map((feature, i) => (
               <tr key={i} className="border-b border-white/10 last:border-0">
                 <td className="px-6 py-3 text-sm text-text/70">{feature.label}</td>
-                {resolvedListings.map((listing: any) => (
-                  <td key={listing.id} className="px-6 py-3 text-center text-sm text-text">
-                    -
-                  </td>
-                ))}
+                {resolvedListings.map((listing: any) => {
+                  const spec = listing.specs?.find(
+                    (s: any) => s.label?.toLowerCase() === feature.label.toLowerCase(),
+                  )
+                  return (
+                    <td key={listing.id} className="px-6 py-3 text-center text-sm text-text">
+                      {spec?.value || '-'}
+                    </td>
+                  )
+                })}
               </tr>
             ))}
           </tbody>

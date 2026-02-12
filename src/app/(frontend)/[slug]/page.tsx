@@ -97,22 +97,22 @@ export default async function DynamicPage({ params, searchParams }: Args) {
         categories: { contains: category.id },
       },
       sort: 'rank',
-      limit: 50,
+      limit: 500,
+      depth: 1,
     })
 
-    const { ListingCard } = await import('@/components/ListingCard')
+    const { FilterableListings } = await import('@/components/FilterableListings')
 
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <BreadcrumbStructuredData items={[{ name: 'Home', url: '/' }, { name: category.name, url: `/${slug}` }]} />
         <h1 className="text-3xl sm:text-4xl font-bold text-heading mb-4">{category.name}</h1>
         {category.description && <p className="text-text/70 mb-8 max-w-3xl">{category.description}</p>}
-        <div className="space-y-4">
-          {listings.map((listing: any, i: number) => (
-            <ListingCard key={listing.id} listing={listing} rank={i + 1} />
-          ))}
-        </div>
-        {listings.length === 0 && <p className="text-text/50 py-8">No listings in this category yet.</p>}
+        {listings.length > 0 ? (
+          <FilterableListings listings={listings} />
+        ) : (
+          <p className="text-text/50 py-8">No listings in this category yet.</p>
+        )}
       </div>
     )
   }
