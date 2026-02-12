@@ -24,6 +24,33 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    livePreview: {
+      url: ({ data, collectionConfig }) => {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+        if (collectionConfig) {
+          const preview = '?preview=true'
+          switch (collectionConfig.slug) {
+            case 'pages':
+              return data.slug === 'home'
+                ? `${baseUrl}${preview}`
+                : `${baseUrl}/${data.slug || ''}${preview}`
+            case 'blog-posts':
+              return `${baseUrl}/blog/${data.slug || ''}${preview}`
+            case 'listings':
+              return `${baseUrl}/review/${data.slug || ''}${preview}`
+          }
+        }
+
+        return baseUrl
+      },
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+      collections: ['pages', 'blog-posts', 'listings'],
+    },
   },
   collections: [Users, Media, Categories, Listings, Pages, BlogPosts],
   globals: [SiteSettings, Navigation, Footer],

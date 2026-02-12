@@ -7,8 +7,9 @@ import { RatingBadge } from '@/components/RatingBadge'
 import { ProsConsBlock } from '@/components/blocks/ProsConsBlock'
 import { BreadcrumbStructuredData, ReviewStructuredData } from '@/components/seo/StructuredData'
 import { absoluteUrl } from '@/lib/utils'
+import { RefreshRouteOnSave } from '@/components/LivePreview/RefreshRouteOnSave'
 
-type Args = { params: Promise<{ slug: string }> }
+type Args = { params: Promise<{ slug: string }>; searchParams: Promise<{ preview?: string }> }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
@@ -38,13 +39,18 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   }
 }
 
-export default async function ReviewPage({ params }: Args) {
+export default async function ReviewPage({ params, searchParams }: Args) {
   const { slug } = await params
+  const { preview } = await searchParams
+  const isPreview = preview === 'true'
   const payload = await getPayload()
+
+  const where: any = { slug: { equals: slug } }
+  if (!isPreview) where.status = { equals: 'published' }
 
   const listing = await payload.find({
     collection: 'listings',
-    where: { slug: { equals: slug }, status: { equals: 'published' } },
+    where,
     limit: 1,
     depth: 2,
   }).then((res) => res.docs[0]).catch(() => null) as any
@@ -55,6 +61,7 @@ export default async function ReviewPage({ params }: Args) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <RefreshRouteOnSave />
       <BreadcrumbStructuredData
         items={[
           { name: 'Home', url: '/' },

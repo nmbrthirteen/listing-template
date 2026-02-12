@@ -4,8 +4,9 @@ import { getPayload } from '@/lib/payload'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { BreadcrumbStructuredData, BlogPostingStructuredData } from '@/components/seo/StructuredData'
 import { absoluteUrl } from '@/lib/utils'
+import { RefreshRouteOnSave } from '@/components/LivePreview/RefreshRouteOnSave'
 
-type Args = { params: Promise<{ slug: string }> }
+type Args = { params: Promise<{ slug: string }>; searchParams: Promise<{ preview?: string }> }
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
@@ -37,13 +38,18 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   }
 }
 
-export default async function BlogPostPage({ params }: Args) {
+export default async function BlogPostPage({ params, searchParams }: Args) {
   const { slug } = await params
+  const { preview } = await searchParams
+  const isPreview = preview === 'true'
   const payload = await getPayload()
+
+  const where: any = { slug: { equals: slug } }
+  if (!isPreview) where.status = { equals: 'published' }
 
   const post = await payload.find({
     collection: 'blog-posts',
-    where: { slug: { equals: slug }, status: { equals: 'published' } },
+    where,
     limit: 1,
     depth: 2,
   }).then((res) => res.docs[0]).catch(() => null) as any
@@ -54,6 +60,7 @@ export default async function BlogPostPage({ params }: Args) {
 
   return (
     <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+      <RefreshRouteOnSave />
       <BreadcrumbStructuredData
         items={[
           { name: 'Home', url: '/' },
