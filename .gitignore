@@ -10,17 +10,17 @@ out/
 .env.local
 .env.*.local
 
-# Database
-data/*.db
-data/*.db-*
-data/*.db-journal
+# Database — all files in data/ except .gitkeep
+data/*
+!data/.gitkeep
 
-# Uploads
+# Uploads — all files in media/ except .gitkeep
 media/*
 !media/.gitkeep
 
-# Keep data dir
-!data/.gitkeep
+# Payload generated
+payload-types.ts
+src/app/(payload)/admin/importMap.js
 
 # OS
 .DS_Store
@@ -30,5 +30,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Payload generated types
-payload-types.ts
+# Build / lock
+package-lock.json
+next-env.d.ts

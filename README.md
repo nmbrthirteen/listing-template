@@ -22,7 +22,7 @@ git clone https://github.com/YOUR_USER/listing-template.git my-site
 cd my-site
 
 # Install
-npm install
+npm install --legacy-peer-deps
 
 # Set up environment
 cp .env.example .env
@@ -71,8 +71,8 @@ Open [http://localhost:3000/admin](http://localhost:3000/admin) to create your f
 | Variable | Description | Default |
 |---|---|---|
 | `PAYLOAD_SECRET` | Secret key for Payload auth | **Required** — change this |
-| `DATABASE_URI` | SQLite database path | `file:./data/database.db` |
 | `NEXT_PUBLIC_SITE_URL` | Public site URL | `http://localhost:3000` |
+| `DATABASE_URI` | SQLite database path (optional) | Auto-resolved to `data/database.db` |
 
 ## Content Types
 
