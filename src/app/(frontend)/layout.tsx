@@ -1,6 +1,12 @@
+import type { Metadata } from 'next'
 import { getPayload } from '@/lib/payload'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+
+export const metadata: Metadata = {
+  title: 'Listing Site',
+  description: 'Find the best options reviewed and ranked',
+}
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const payload = await getPayload()
@@ -30,14 +36,19 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       : null
 
   return (
-    <div style={{ ...themeVars, fontFamily }} className="min-h-screen bg-bg text-text">
-      {fontUrl && (
-        // eslint-disable-next-line @next/next/no-page-custom-font
-        <link rel="stylesheet" href={fontUrl} />
-      )}
-      <Header siteSettings={siteSettings} navigation={navigation} />
-      <main>{children}</main>
-      <Footer footer={footer} siteSettings={siteSettings} />
-    </div>
+    <html lang="en">
+      <head>
+        {fontUrl && (
+          <link rel="stylesheet" href={fontUrl} />
+        )}
+      </head>
+      <body>
+        <div style={{ ...themeVars, fontFamily }} className="min-h-screen bg-bg text-text">
+          <Header siteSettings={siteSettings} navigation={navigation} />
+          <main>{children}</main>
+          <Footer footer={footer} siteSettings={siteSettings} />
+        </div>
+      </body>
+    </html>
   )
 }
